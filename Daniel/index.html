@@ -6,25 +6,60 @@
   <link rel="stylesheet" type="text/css" href="style/D.css">
   <script type="text/javascript" src = script/aaa.js ></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+      <style>
+    .line{
+      fill: none;
+      stroke-width: 3;
+        stroke: red;
+    }
+  </style>
 </head>
 <body>
 
 
 
 <script type="text/javascript">
-
+var height=600
+var width=800
 
 var parseTime = d3.timeParse("%d-%b-%y");
   
 d3.csv("./stocks.csv",function(data)
-{
+{ var ln   = data.length;
+  var maxy = d3.max(data.close);
+  var miny = d3.min(data.close);
   data.forEach(function(d) {
       d.date = parseTime(d.date);
       d.close = +d.close;
 }
 );
 
+  var ctrl = d3.select("body")
+  .append("svg").attr("width",800).attr("height",600);
+  var x = d3.scaleTime().range([
+    height, 0]);
+  var y = d3.scaleLinear().range([height, 0]);
 
+    var valueline = d3.line().
+    x(
+      function(d,i) 
+      { xset=(width/ln)*i;
+        console.log();
+        return (xset); 
+
+      }).
+    y(
+      function(d) 
+      { 
+        yset = d.close;
+        console.log(yset);
+        return yset;
+      });
+
+    ctrl.append("path").
+    data([data]).
+    attr("class", "line").
+    attr("d", valueline); 
 
 var svgContainer = d3 .selectAll(".list") .append("svg") .attr("height",1000) .attr("width", 1000);
 
